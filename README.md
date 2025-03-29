@@ -1,6 +1,6 @@
 # Carbonico - Calcolatore di Impronta di Carbonio Digitale
 
-![Carbonico Logo]([/public/images/logo.png]([https://ibb.co/6RjrD5kk](https://i.postimg.cc/MGJ9zYDc/logo-removebg-preview.png)))
+![Carbonico Logo]([/public/images/logo.png]([https://ibb.co/6RjrD5kk](https://i.postimg.cc/MGJ9zYDc/logo-removebg-preview.png))
 
 Carbonico è un'applicazione web interattiva progettata per sensibilizzare gli utenti sull'impatto ambientale delle loro attività digitali quotidiane. L'applicazione calcola l'impronta di carbonio digitale basandosi su parametri come lo streaming video, l'utilizzo dei social media, le email e l'archiviazione cloud, offrendo visualizzazioni intuitive e suggerimenti personalizzati per ridurre le emissioni di CO₂.
 
