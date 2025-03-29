@@ -3,14 +3,14 @@ services:
     image: ngrok/ngrok:latest
     container_name: ngrok
     restart: always
+    command:  ["http", "frontend:3000"]
     environment:
-      - NGROK_AUTHTOKEN=your_ngrok_auth_token
-      - NGROK_PORT=frontend:3000
-      - NGROK_REGION=eu
+      - NGROK_AUTHTOKEN=
     ports:
       - "4040:4040"
     depends_on:
       - backend
+    tty: true
   frontend:
     build: frontend/.
     container_name: frontend
