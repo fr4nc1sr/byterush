@@ -23,10 +23,10 @@ Carbonico è un'applicazione web interattiva progettata per sensibilizzare gli u
 ## 🛠️ Tecnologie Utilizzate
 
 - **Backend**:
-  - [Next.js 14](https://nextjs.org/) - Framework React con App Router
+  - [Next.js 14](https://nextjs.org/)
 
 - **Persistenza Dati**:
-  - LocalStorage - Per salvare i dati utente e i calcoli
+  - LocalStorage - Per salvare i dati utente
 
 - **Sviluppo**:
   - [TypeScript](https://www.typescriptlang.org/) - Superset tipizzato di JavaScript
