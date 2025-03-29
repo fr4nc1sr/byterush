@@ -48,3 +48,8 @@ Carbonico è un'applicazione web interattiva progettata per sensibilizzare gli u
    ```bash
    git clone https://github.com/fr4nc1sr/carbonico.git
    cd carbonico
+2. **BUILDA IL DOCKER**:
+   ```bash
+   docker build compose
+   docker compose up
+
