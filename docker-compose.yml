@@ -1,0 +1,42 @@
+services:
+
+  frontend:
+    build: frontend/.
+    container_name: frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    # (Remove the published port if Nginx is the entrypoint)
+
+  backend:
+    build: backend/.
+    container_name: backend
+    restart: always
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Byterushroot
+      MYSQL_DATABASE: Byterush
+      MYSQL_USER: Byterush
+      MYSQL_PASSWORD: Byterushpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  mariadb_data:
