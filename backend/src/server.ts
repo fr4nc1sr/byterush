@@ -5,8 +5,12 @@ import { saveCalculation, getCalculations } from './calculationsService';
 const app = express();
 app.use(express.json());
 
-// Aggiungi CORS se il frontend gira su un dominio/porta diversa
-app.use(cors());
+// Configura CORS per accettare le richieste dal frontend
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://frontend:3000'],
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
 
 // Endpoint di test
 app.get('/api/hello', (req, res) => {

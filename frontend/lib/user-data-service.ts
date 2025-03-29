@@ -1,7 +1,4 @@
-// Adatta l'URL base del tuo backend Express
-// In Docker Compose, in locale di solito: http://localhost:8080
-// Oppure, se hai un host diverso, cambia qui.
-const BACKEND_URL = "http://backend:8000";
+import { config } from './config';
 
 // Tipo "Calculation" (simile a "UserCalculation" del backend)
 export interface Calculation {
@@ -23,7 +20,7 @@ export interface Calculation {
 // 1) GET /api/calculations
 // ------------------------------
 export async function getCalculations(): Promise<Calculation[]> {
-  const response = await fetch(`${BACKEND_URL}/api/calculations`);
+  const response = await fetch('/api/calculations');
   if (!response.ok) {
     throw new Error(`Errore getCalculations: status ${response.status}`);
   }
@@ -36,7 +33,7 @@ export async function getCalculations(): Promise<Calculation[]> {
 export async function saveCalculation(
   data: Omit<Calculation, 'id' | 'date'>
 ): Promise<Calculation> {
-  const response = await fetch(`${BACKEND_URL}/api/calculations`, {
+  const response = await fetch('/api/calculations', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),

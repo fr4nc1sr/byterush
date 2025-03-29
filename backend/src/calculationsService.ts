@@ -1,32 +1,50 @@
-import { createPool } from 'mysql2/promise';
+import { createPool, RowDataPacket } from 'mysql2/promise';
 
 const pool = createPool({
-  host: 'mariadb',       // Nome del servizio DB in docker-compose
-  user: 'Byterush',
-  password: 'Byterushpass',
-  database: 'Byterush',
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'Byterush',
+  password: process.env.DB_PASSWORD || 'Byterushpass',
+  database: process.env.DB_NAME || 'Byterush',
+  port: 3306,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-export interface Calculation {
-  id: number;         // Unique identifier
-  name: string;       // Name of the calculation
-  value: number;      // Value of the calculation
-  createdAt: Date;    // Timestamp of when it was created
+export interface Calculation extends RowDataPacket {
+  id?: number;
+  username: string;
+  carbonFootprint: number;
+  date?: Date;
+  activities: {
+    streamingHours: number;
+    videoQuality: string;
+    socialMediaHours: number;
+    emailsPerDay: number;
+    cloudStorageGB: number;
+    videoCallsHours: number;
+  };
 }
 
 // Funzione per salvare un nuovo calcolo
-export async function saveCalculation(data: Omit<Calculation, 'id'>) {
-  const { name, value, createdAt } = data;
+export async function saveCalculation(data: Omit<Calculation, 'id' | 'date'>) {
+  const { username, carbonFootprint, activities } = data;
+  const date = new Date();
 
   try {
     // Insert query
     const [result] = await pool.query(
-      'INSERT INTO calculations (name, value, createdAt) VALUES (?, ?, ?)',
-      [name, value, createdAt]
+      'INSERT INTO calculations (username, carbonFootprint, date, activities) VALUES (?, ?, ?, ?)',
+      [username, carbonFootprint, date, JSON.stringify(activities)]
     );
 
-    // Return the result of the query (e.g., the inserted ID)
-    return result;
+    // Recupera il record appena inserito
+    const [rows] = await pool.query<Calculation[]>(
+      'SELECT * FROM calculations WHERE id = ?',
+      [(result as any).insertId]
+    );
+
+    return rows[0];
   } catch (error) {
     console.error('Error saving calculation:', error);
     throw error;
@@ -36,8 +54,11 @@ export async function saveCalculation(data: Omit<Calculation, 'id'>) {
 // Funzione per ottenere i calcoli
 export async function getCalculations() {
   try {
-    const [rows] = await pool.query('SELECT * FROM calculations');
-    return rows; // Elaborale se necessario
+    const [rows] = await pool.query<Calculation[]>('SELECT * FROM calculations ORDER BY date DESC');
+    return rows.map((row) => ({
+      ...row,
+      activities: JSON.parse(row.activities as unknown as string)
+    }));
   } catch (error) {
     console.error('Error fetching calculations:', error);
     throw error;
