@@ -446,7 +446,6 @@ export default function CalculatorPage() {
                       value={36}
                       max={100}
                       className="h-2 bg-eco-200"
-                      indicatorClassName="bg-gradient-to-r from-eco-400 to-eco-600"
                     />
                   </div>
 
@@ -460,7 +459,6 @@ export default function CalculatorPage() {
                       value={97}
                       max={100}
                       className="h-2 bg-eco-200"
-                      indicatorClassName="bg-gradient-to-r from-eco-400 to-eco-600"
                     />
                   </div>
 
@@ -474,7 +472,6 @@ export default function CalculatorPage() {
                       value={50}
                       max={1000}
                       className="h-2 bg-eco-200"
-                      indicatorClassName="bg-gradient-to-r from-eco-400 to-eco-600"
                     />
                   </div>
 
@@ -488,7 +485,6 @@ export default function CalculatorPage() {
                       value={30}
                       max={100}
                       className="h-2 bg-eco-200"
-                      indicatorClassName="bg-gradient-to-r from-eco-400 to-eco-600"
                     />
                   </div>
 
