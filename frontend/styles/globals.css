@@ -2,55 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Imposta il font di default per il body della pagina */
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* ----------------------------------------------------------
+   Layer: Utilities
+   ----------------------------------------------------------
+   Aggiunge una utility personalizzata per il wrapping del testo.
+   La classe .text-balance applica la proprietà CSS "text-wrap: balance"
+   che tenta di bilanciare il testo su più righe.
+----------------------------------------------------------- */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
 
+/* ----------------------------------------------------------
+   Layer: Base
+   ----------------------------------------------------------
+   Definisce le variabili CSS per i temi (light e dark) che verranno usate
+   in tutta l'applicazione per garantire una gestione centralizzata dei colori e degli stili.
+----------------------------------------------------------- */
 @layer base {
+  /* Variabili per il tema chiaro */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
+    --background: 0 0% 100%;          /* Colore di sfondo: bianco */
+    --foreground: 0 0% 3.9%;           /* Colore del testo principale: quasi nero */
+    --card: 0 0% 100%;                /* Colore di sfondo delle card: bianco */
+    --card-foreground: 0 0% 3.9%;      /* Colore del testo nelle card: quasi nero */
+    --popover: 0 0% 100%;             /* Colore di sfondo dei popover: bianco */
+    --popover-foreground: 0 0% 3.9%;   /* Colore del testo nei popover: quasi nero */
+    --primary: 0 0% 9%;               /* Colore primario scuro */
+    --primary-foreground: 0 0% 98%;     /* Testo su elementi primari: bianco */
+    --secondary: 0 0% 96.1%;           /* Colore secondario chiaro */
+    --secondary-foreground: 0 0% 9%;    /* Testo su elementi secondari: scuro */
+    --muted: 0 0% 96.1%;              /* Colore per elementi "muted" (attenuati) */
+    --muted-foreground: 0 0% 45.1%;     /* Testo per elementi muted: grigio scuro */
+    --accent: 0 0% 96.1%;              /* Colore accentuato chiaro */
+    --accent-foreground: 0 0% 9%;       /* Testo su elementi accent: scuro */
+    --destructive: 0 84.2% 60.2%;       /* Colore per azioni distruttive (es. eliminazioni) */
+    --destructive-foreground: 0 0% 98%;  /* Testo su elementi distruttivi: bianco */
+    --border: 0 0% 89.8%;             /* Colore dei bordi: grigio chiaro */
+    --input: 0 0% 89.8%;              /* Colore di sfondo degli input: grigio chiaro */
+    --ring: 0 0% 3.9%;               /* Colore del ring (outline) degli elementi focalizzati: quasi nero */
+    --chart-1: 12 76% 61%;            /* Colore per i grafici (diversi set) */
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --radius: 0.5rem;                /* Raggio di arrotondamento degli elementi (es. bordi arrotondati) */
+    --sidebar-background: 0 0% 98%;    /* Colore di sfondo della sidebar: quasi bianco */
+    --sidebar-foreground: 240 5.3% 26.1%; /* Colore del testo della sidebar: grigio scuro */
+    --sidebar-primary: 240 5.9% 10%;    /* Colore primario della sidebar: molto scuro */
+    --sidebar-primary-foreground: 0 0% 98%; /* Testo su elementi primari della sidebar: bianco */
+    --sidebar-accent: 240 4.8% 95.9%;   /* Colore accentuato della sidebar: molto chiaro */
+    --sidebar-accent-foreground: 240 5.9% 10%; /* Testo su elementi accent della sidebar: scuro */
+    --sidebar-border: 220 13% 91%;      /* Colore del bordo della sidebar */
+    --sidebar-ring: 217.2 91.2% 59.8%;  /* Colore del ring per la sidebar */
   }
+
+  /* Variabili per il tema scuro: sovrascrivono quelle del tema chiaro quando viene applicata la classe .dark */
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 3.9%;           /* Sfondo: molto scuro */
+    --foreground: 0 0% 98%;            /* Testo: bianco */
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
@@ -84,6 +101,13 @@ body {
   }
 }
 
+/* ----------------------------------------------------------
+   Layer: Base (Altra Sezione)
+   ----------------------------------------------------------
+   Applica stili globali a tutti gli elementi.
+   In questo caso, ogni elemento (*) riceve il bordo definito dalla variabile --border
+   e il body viene impostato con il colore di sfondo e del testo secondo le variabili.
+----------------------------------------------------------- */
 @layer base {
   * {
     @apply border-border;
@@ -92,4 +116,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-

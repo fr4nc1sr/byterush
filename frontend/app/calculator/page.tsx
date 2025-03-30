@@ -1,66 +1,70 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Slider } from "@/components/ui/slider"
-import { Progress } from "@/components/ui/progress"
-import { calculateCarbonFootprint, getEquivalent, getSuggestions } from "@/lib/carbon-calculator"
-import { CarbonResult } from "@/components/carbon-result"
-import { UsernameForm } from "@/components/username-form"
-import { EcoLeaderboard } from "@/components/eco-leaderboard"
-import { saveCalculation } from "@/lib/user-data-service"
-import { Activity, Cloud, Smartphone, Calculator, Info, PlayCircle, User } from "lucide-react"
-import { Navbar } from "@/components/navbar"
+// Importazione delle funzionalità di React e altri componenti customizzati
+import { useState, useEffect } from "react" // Hook per gestire gli stati e gli effetti collaterali nel componente
+import { Button } from "@/components/ui/button" // Componente pulsante personalizzato
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card" // Componenti per creare delle card (contenitori stilizzati)
+import { Label } from "@/components/ui/label" // Componente per le etichette dei form
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs" // Componenti per gestire le tabulazioni (tabs)
+import { Slider } from "@/components/ui/slider" // Componente slider per la selezione di valori numerici
+import { Progress } from "@/components/ui/progress" // Componente per visualizzare barre di progresso
+import { calculateCarbonFootprint, getEquivalent, getSuggestions } from "@/lib/carbon-calculator" // Funzioni per calcolare l'impronta di carbonio, le equivalenze e suggerimenti
+import { CarbonResult } from "@/components/carbon-result" // Componente per mostrare i risultati del calcolo
+import { UsernameForm } from "@/components/username-form" // Componente per l'inserimento del nome utente
+import { EcoLeaderboard } from "@/components/eco-leaderboard" // Componente per la classifica eco
+import { saveCalculation } from "@/lib/user-data-service" // Funzione per salvare i dati del calcolo
+import { Activity, Cloud, Smartphone, Calculator, Info, PlayCircle, User } from "lucide-react" // Icone per migliorare l'interfaccia utente
+import { Navbar } from "@/components/navbar" // Componente per la barra di navigazione
 
+// Componente principale della pagina del calcolatore
 export default function CalculatorPage() {
-  // Stati per gestire i valori del calcolatore
-  const [activeTab, setActiveTab] = useState("streaming")
-  const [streamingHours, setStreamingHours] = useState(2)
-  const [videoQuality, setVideoQuality] = useState("hd")
-  const [socialMediaHours, setSocialMediaHours] = useState(1.5)
-  const [emailsPerDay, setEmailsPerDay] = useState(15)
-  const [cloudStorageGB, setCloudStorageGB] = useState(5)
-  const [videoCallsHours, setVideoCallsHours] = useState(1)
+  // Stati per gestire i valori degli input relativi alle attività digitali
+  const [activeTab, setActiveTab] = useState("streaming") // Stato per la tab attiva, inizialmente "streaming"
+  const [streamingHours, setStreamingHours] = useState(2) // Ore di streaming video al giorno (default: 2)
+  const [videoQuality, setVideoQuality] = useState("hd") // Qualità del video impostata su "hd" per default
+  const [socialMediaHours, setSocialMediaHours] = useState(1.5) // Ore dedicate ai social media (default: 1.5)
+  const [emailsPerDay, setEmailsPerDay] = useState(15) // Numero di email inviate/ricevute al giorno (default: 15)
+  const [cloudStorageGB, setCloudStorageGB] = useState(5) // GB di archiviazione cloud usati (default: 5)
+  const [videoCallsHours, setVideoCallsHours] = useState(1) // Ore di videochiamate al giorno (default: 1)
 
-  // Stati per gestire il flusso dell'applicazione
-  const [carbonFootprint, setCarbonFootprint] = useState(0)
-  const [showResults, setShowResults] = useState(false)
-  const [isCalculating, setIsCalculating] = useState(false)
-  const [username, setUsername] = useState<string | null>(null)
-  const [showUsernameForm, setShowUsernameForm] = useState(true)
+  // Stati per gestire il flusso dell'applicazione e la visualizzazione dei risultati
+  const [carbonFootprint, setCarbonFootprint] = useState(0) // Impronta di carbonio calcolata
+  const [showResults, setShowResults] = useState(false) // Flag per mostrare/nascondere i risultati del calcolo
+  const [isCalculating, setIsCalculating] = useState(false) // Flag per indicare se il calcolo è in corso
+  const [username, setUsername] = useState<string | null>(null) // Nome utente, inizialmente non definito
+  const [showUsernameForm, setShowUsernameForm] = useState(true) // Flag per mostrare o nascondere il form per il nome utente
 
-  // Controlla se c'è un utente recente nel localStorage all'avvio
+  // useEffect per controllare se esiste un utente recente salvato nel localStorage all'avvio del componente
   useEffect(() => {
     const recentUsersJson = localStorage.getItem("carbonico_recent_users")
     if (recentUsersJson) {
       const recentUsers = JSON.parse(recentUsersJson)
       if (recentUsers.length > 0) {
-        // Preseleziona l'utente più recente, ma comunque mostra il form
+        // Pre-seleziona il primo utente della lista, che rappresenta l'utente più recente
         setUsername(recentUsers[0])
       }
     }
-  }, [])
+  }, []) // L'effetto viene eseguito solo al montaggio del componente
 
-  // Gestisce l'invio del nome utente
+  // Funzione per gestire l'invio del nome utente dal form
   const handleUsernameSubmit = (name: string) => {
-    setUsername(name)
-    setShowUsernameForm(false)
+    setUsername(name) // Imposta il nome utente nello stato
+    setShowUsernameForm(false) // Nasconde il form dopo l'invio
   }
 
-  // Gestisce il calcolo dell'impronta di carbonio
+  // Funzione per gestire il calcolo dell'impronta di carbonio
   const handleCalculate = () => {
+    // Se non è presente un nome utente, mostra il form per richiederlo
     if (!username) {
       setShowUsernameForm(true)
       return
     }
 
-    setIsCalculating(true)
+    setIsCalculating(true) // Imposta lo stato di calcolo in corso
 
-    // Simuliamo un breve ritardo per dare l'impressione di calcolo
+    // Simula un ritardo (800ms) per dare l'impressione di un elaborazione
     setTimeout(() => {
+      // Costruisce l'oggetto "activities" con i valori correnti inseriti dall'utente
       const activities = {
         streamingHours,
         videoQuality,
@@ -70,47 +74,54 @@ export default function CalculatorPage() {
         videoCallsHours,
       }
 
+      // Calcola l'impronta di carbonio usando la funzione importata
       const footprint = calculateCarbonFootprint(activities)
 
-      // Salva il calcolo nel localStorage
+      // Salva il calcolo (può essere salvato su localStorage o in un database)
       saveCalculation({
         username,
         carbonFootprint: footprint,
         activities,
       })
 
-      setCarbonFootprint(footprint)
-      setShowResults(true)
-      setIsCalculating(false)
+      setCarbonFootprint(footprint) // Aggiorna lo stato con il valore calcolato
+      setShowResults(true) // Mostra i risultati del calcolo
+      setIsCalculating(false) // Termina lo stato di calcolo in corso
     }, 800)
   }
 
-  // Gestisce il reset del form
+  // Funzione per resettare il form, mostrando nuovamente il form per il nome utente
   const handleReset = () => {
     setShowResults(false)
     setShowUsernameForm(true)
   }
 
-  // Mostra il form del nome utente se necessario
+  // Se il form per il nome utente deve essere mostrato, restituisce questo blocco
   if (showUsernameForm) {
     return (
       <div className="flex flex-col min-h-screen">
+        {/* Barra di navigazione */}
         <Navbar />
         <div className="container mx-auto py-6 px-4 md:px-6 flex-1">
           <div className="flex flex-col items-center space-y-6 text-center mb-10">
+            {/* Titolo principale della pagina */}
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-eco-800">
               Calcolatore di Impronta di Carbonio Digitale
             </h1>
+            {/* Descrizione introduttiva */}
             <p className="max-w-[700px] text-eco-600 md:text-xl/relaxed">
               Stima quanta CO₂ generano le tue attività online e scopri come ridurre il tuo impatto.
             </p>
           </div>
 
           <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
+            {/* Componente per inserire il nome utente */}
             <UsernameForm onSubmit={handleUsernameSubmit} />
+            {/* Classifica eco */}
             <EcoLeaderboard />
           </div>
         </div>
+        {/* Footer della pagina */}
         <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full border-t border-eco-200 px-4 md:px-6 bg-eco-50">
           <p className="text-xs text-eco-600">© 2025 Carbonico. Tutti i diritti riservati.</p>
         </footer>
@@ -118,11 +129,14 @@ export default function CalculatorPage() {
     )
   }
 
+  // Se il form per il nome utente non deve essere mostrato, restituisce l'intera interfaccia del calcolatore
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Barra di navigazione */}
       <Navbar />
       <div className="container mx-auto py-6 px-4 md:px-6 flex-1">
         <div className="flex flex-col items-center space-y-6 text-center">
+          {/* Titolo e descrizione */}
           <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-eco-800">
             Calcolatore di Impronta di Carbonio Digitale
           </h1>
@@ -130,7 +144,7 @@ export default function CalculatorPage() {
             Stima quanta CO₂ generano le tue attività online e scopri come ridurre il tuo impatto.
           </p>
 
-          {/* Badge con il nome utente */}
+          {/* Badge che mostra il nome utente e consente di resettare il form per cambiare utente */}
           {username && (
             <div className="bg-eco-100 px-4 py-2 rounded-full flex items-center gap-2 text-eco-700">
               <User className="h-4 w-4" />
@@ -150,7 +164,7 @@ export default function CalculatorPage() {
         </div>
 
         <div className="grid gap-8 mt-8 lg:grid-cols-[2fr_1fr]">
-          {/* Card principale del calcolatore */}
+          {/* Card principale contenente il calcolatore */}
           <Card className="border-2 border-primary/20 card-hover">
             <CardHeader className="bg-gradient-to-r from-eco-200 to-eco-100 pb-2">
               <CardTitle className="text-eco-800 flex items-center gap-2">
@@ -162,8 +176,10 @@ export default function CalculatorPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
+              {/* Tabs per suddividere gli input in categorie */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid grid-cols-3 mb-8 bg-eco-100">
+                  {/* Tab per la sezione di streaming */}
                   <TabsTrigger
                     value="streaming"
                     className="flex items-center gap-2 data-[state=active]:bg-eco-200 data-[state=active]:text-eco-800"
@@ -171,6 +187,7 @@ export default function CalculatorPage() {
                     <Activity className="h-4 w-4" />
                     <span className="hidden sm:inline">Streaming</span>
                   </TabsTrigger>
+                  {/* Tab per la sezione di social media e email */}
                   <TabsTrigger
                     value="social"
                     className="flex items-center gap-2 data-[state=active]:bg-eco-200 data-[state=active]:text-eco-800"
@@ -178,6 +195,7 @@ export default function CalculatorPage() {
                     <Smartphone className="h-4 w-4" />
                     <span className="hidden sm:inline">Social & Email</span>
                   </TabsTrigger>
+                  {/* Tab per la sezione di cloud e videochiamate */}
                   <TabsTrigger
                     value="cloud"
                     className="flex items-center gap-2 data-[state=active]:bg-eco-200 data-[state=active]:text-eco-800"
@@ -187,10 +205,11 @@ export default function CalculatorPage() {
                   </TabsTrigger>
                 </TabsList>
 
-                {/* Tab per lo streaming */}
+                {/* Contenuto della tab "streaming" */}
                 <TabsContent value="streaming" className="space-y-6">
                   <div className="space-y-6 p-4 bg-eco-50 rounded-lg">
                     <div>
+                      {/* Slider per impostare le ore di streaming video al giorno */}
                       <div className="flex justify-between mb-2">
                         <Label htmlFor="streaming-hours" className="text-eco-700 flex items-center gap-1">
                           <PlayCircle className="h-4 w-4" />
@@ -214,6 +233,7 @@ export default function CalculatorPage() {
                     </div>
 
                     <div className="space-y-2">
+                      {/* Sezione per selezionare la qualità del video */}
                       <Label className="text-eco-700">Qualità Video</Label>
                       <div className="grid grid-cols-3 gap-2">
                         <Button
@@ -242,10 +262,11 @@ export default function CalculatorPage() {
                   </div>
                 </TabsContent>
 
-                {/* Tab per social e email */}
+                {/* Contenuto della tab "social" per attività sui social e gestione delle email */}
                 <TabsContent value="social" className="space-y-6">
                   <div className="space-y-6 p-4 bg-eco-50 rounded-lg">
                     <div>
+                      {/* Slider per impostare le ore spese sui social media */}
                       <div className="flex justify-between mb-2">
                         <Label htmlFor="social-hours" className="text-eco-700 flex items-center gap-1">
                           <Smartphone className="h-4 w-4" />
@@ -269,6 +290,7 @@ export default function CalculatorPage() {
                     </div>
 
                     <div>
+                      {/* Slider per impostare il numero di email inviate/ricevute al giorno */}
                       <div className="flex justify-between mb-2">
                         <Label htmlFor="emails" className="text-eco-700 flex items-center gap-1">
                           <Info className="h-4 w-4" />
@@ -291,10 +313,11 @@ export default function CalculatorPage() {
                   </div>
                 </TabsContent>
 
-                {/* Tab per cloud e videochiamate */}
+                {/* Contenuto della tab "cloud" per gestione di cloud storage e videochiamate */}
                 <TabsContent value="cloud" className="space-y-6">
                   <div className="space-y-6 p-4 bg-eco-50 rounded-lg">
                     <div>
+                      {/* Slider per impostare i GB di archiviazione cloud utilizzati */}
                       <div className="flex justify-between mb-2">
                         <Label htmlFor="cloud-storage" className="text-eco-700 flex items-center gap-1">
                           <Cloud className="h-4 w-4" />
@@ -318,6 +341,7 @@ export default function CalculatorPage() {
                     </div>
 
                     <div>
+                      {/* Slider per impostare le ore di videochiamate */}
                       <div className="flex justify-between mb-2">
                         <Label htmlFor="video-calls" className="text-eco-700 flex items-center gap-1">
                           <Activity className="h-4 w-4" />
@@ -343,13 +367,15 @@ export default function CalculatorPage() {
                 </TabsContent>
               </Tabs>
             </CardContent>
+            {/* Footer della card con il pulsante per avviare il calcolo */}
             <CardFooter className="bg-eco-50">
               <Button
                 onClick={handleCalculate}
                 className="w-full bg-eco-600 hover:bg-eco-700 text-white font-medium py-6"
-                disabled={isCalculating}
+                disabled={isCalculating} // Disabilita il pulsante se il calcolo è in corso
               >
                 {isCalculating ? (
+                  // Se il calcolo è in corso, mostra un indicatore di caricamento
                   <span className="flex items-center gap-2">
                     <svg
                       className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
@@ -374,6 +400,7 @@ export default function CalculatorPage() {
                     Calcolo in corso...
                   </span>
                 ) : (
+                  // Se il calcolo non è in corso, mostra il pulsante per eseguire il calcolo
                   <span className="flex items-center gap-2">
                     <Calculator className="h-5 w-5" />
                     Calcola la Mia Impronta
@@ -383,8 +410,9 @@ export default function CalculatorPage() {
             </CardFooter>
           </Card>
 
-          {/* Mostra i risultati o la card informativa */}
+          {/* Sezione per mostrare i risultati oppure una card informativa se il calcolo non è stato ancora eseguito */}
           {showResults ? (
+            // Se sono presenti risultati, mostra il componente CarbonResult con i dati calcolati
             <CarbonResult
               carbonFootprint={carbonFootprint}
               equivalent={getEquivalent(carbonFootprint)}
@@ -398,6 +426,7 @@ export default function CalculatorPage() {
               })}
             />
           ) : (
+            // Se non ci sono risultati, mostra una card informativa "Lo Sapevi?"
             <Card className="border-2 border-primary/20 card-hover">
               <CardHeader className="bg-gradient-to-r from-eco-200 to-eco-100 pb-2">
                 <CardTitle className="text-eco-800 flex items-center gap-2">
@@ -407,7 +436,7 @@ export default function CalculatorPage() {
               </CardHeader>
               <CardContent className="space-y-6 pt-6">
                 <div className="space-y-4">
-                  {/* Informazioni sull'impatto delle attività digitali */}
+                  {/* Informazioni sull'impatto ambientale dello streaming video in HD */}
                   <div className="space-y-2 p-3 bg-eco-50 rounded-lg">
                     <div className="flex justify-between text-sm">
                       <span className="text-eco-700">1 ora di streaming video HD</span>
@@ -421,6 +450,7 @@ export default function CalculatorPage() {
                     />
                   </div>
 
+                  {/* Informazioni sull'impatto ambientale dello streaming video in 4K */}
                   <div className="space-y-2 p-3 bg-eco-50 rounded-lg">
                     <div className="flex justify-between text-sm">
                       <span className="text-eco-700">1 ora di streaming video 4K</span>
@@ -434,6 +464,7 @@ export default function CalculatorPage() {
                     />
                   </div>
 
+                  {/* Informazioni sull'impatto ambientale dell'invio di un'email con allegato */}
                   <div className="space-y-2 p-3 bg-eco-50 rounded-lg">
                     <div className="flex justify-between text-sm">
                       <span className="text-eco-700">1 email con allegato</span>
@@ -447,6 +478,7 @@ export default function CalculatorPage() {
                     />
                   </div>
 
+                  {/* Informazioni sull'impatto ambientale dell'archiviazione cloud */}
                   <div className="space-y-2 p-3 bg-eco-50 rounded-lg">
                     <div className="flex justify-between text-sm">
                       <span className="text-eco-700">1GB di archiviazione cloud (mensile)</span>
@@ -460,6 +492,7 @@ export default function CalculatorPage() {
                     />
                   </div>
 
+                  {/* Breve testo esplicativo sull'impronta di carbonio delle attività digitali */}
                   <div className="mt-6 text-sm text-eco-600 p-3 bg-eco-50 rounded-lg">
                     <p>
                       L'impronta di carbonio delle attività digitali varia in base all'efficienza del dispositivo, alle
@@ -472,15 +505,15 @@ export default function CalculatorPage() {
           )}
         </div>
 
-        {/* Sezione per la classifica */}
+        {/* Sezione per visualizzare la classifica eco */}
         <div className="mt-10">
           <EcoLeaderboard />
         </div>
       </div>
+      {/* Footer della pagina */}
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full border-t border-eco-200 px-4 md:px-6 bg-eco-50">
         <p className="text-xs text-eco-600">© 2025 Carbonico. Tutti i diritti riservati.</p>
       </footer>
     </div>
   )
 }
-

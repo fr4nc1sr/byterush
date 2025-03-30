@@ -1,17 +1,23 @@
+/* Includi le direttive base, components e utilities di Tailwind CSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Imposta il font di default per il body della pagina */
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Aggiunge un nuovo livello di utilities per definire classi personalizzate */
+/* La classe .text-balance applica la proprietà "text-wrap" con valore "balance" */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
 
+/* Aggiunge un livello base per definire stili globali e variabili CSS */
+/* Le variabili definite in :root sono usate per il tema chiaro */
 @layer base {
   :root {
     --background: 142 52% 96%;
@@ -48,6 +54,7 @@ body {
     --sidebar-border: 142 20% 85%;
     --sidebar-ring: 142 50% 40%;
   }
+  /* Definisce il tema scuro, applicabile quando viene aggiunta la classe .dark */
   .dark {
     --background: 142 30% 10%;
     --foreground: 142 10% 90%;
@@ -84,39 +91,52 @@ body {
   }
 }
 
+/* Un ulteriore livello base per applicare stili globali */
+/* Applica il bordo definito dalla variabile --border a tutti gli elementi */
 @layer base {
   * {
     @apply border-border;
   }
+  /* Applica al body il background e il colore del testo definiti dalle variabili --background e --foreground */
   body {
     @apply bg-background text-foreground;
   }
 }
 
+/* Classe per applicare un gradiente eco-friendly */
+/* Il gradiente parte da una tonalità di verde chiaro a verde scuro */
 .eco-gradient {
   background: linear-gradient(135deg, #56a156 0%, #347834 100%);
 }
 
+/* Classe per applicare un gradiente "earth" (terra) */
+/* Utilizza tonalità calde e terrose */
 .earth-gradient {
   background: linear-gradient(135deg, #b29964 0%, #6b5c3c 100%);
 }
 
+/* Classe per applicare un gradiente "water" (acqua) */
+/* Utilizza tonalità che ricordano l'acqua, dal blu chiaro al blu scuro */
 .water-gradient {
   background: linear-gradient(135deg, #64bed7 0%, #3c7281 100%);
 }
 
+/* Classe per applicare una transizione animata alle card */
+/* La transizione interessa la trasformazione e l'ombra (box-shadow) */
 .card-hover {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Effetto hover per le card: al passaggio del mouse la card si solleva e l'ombra aumenta */
 .card-hover:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
 
+/* Classe per lo slider thumb, ovvero il cursore del componente slider */
+/* Viene applicato il colore primario, un bordo bianco e un'ombra per dare profondità */
 .slider-thumb {
   @apply bg-primary rounded-full border-2 border-white shadow-md;
   width: 24px;
   height: 24px;
 }
-

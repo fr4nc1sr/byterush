@@ -1,25 +1,34 @@
+// Importazione dei componenti UI necessari per costruire le card, le tabs e gli altri elementi della pagina
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
+// Importazione dell'icona CheckCircle per indicare suggerimenti o azioni positive
 import { CheckCircle } from "lucide-react"
+// Importazione della Navbar per la navigazione nella pagina
 import { Navbar } from "@/components/navbar"
 
+// Componente principale della pagina dei suggerimenti eco-friendly
 export default function TipsPage() {
   return (
+    // Container principale della pagina, impostato come flex colonna e con altezza minima pari a quella dello schermo
     <div className="flex flex-col min-h-screen">
+      {/* Barra di navigazione */}
       <Navbar />
+      {/* Container centrale per il contenuto */}
       <div className="container mx-auto py-6 px-4 md:px-6 flex-1">
+        {/* Sezione introduttiva: titolo e descrizione centrati */}
         <div className="flex flex-col items-center space-y-6 text-center">
           <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
             Consigli Digitali Eco-Friendly
           </h1>
           <p className="max-w-[700px] text-gray-500 md:text-xl/relaxed">
-            Semplici cambiamenti nelle tue abitudini digitali possono ridurre significativamente la tua impronta di
-            carbonio.
+            Semplici cambiamenti nelle tue abitudini digitali possono ridurre significativamente la tua impronta di carbonio.
           </p>
         </div>
 
+        {/* Tabs per navigare tra le diverse categorie di suggerimenti */}
         <Tabs defaultValue="streaming" className="mt-8">
+          {/* Lista delle tabs con quattro categorie */}
           <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="streaming">Streaming</TabsTrigger>
             <TabsTrigger value="devices">Dispositivi</TabsTrigger>
@@ -27,17 +36,24 @@ export default function TipsPage() {
             <TabsTrigger value="storage">Archiviazione</TabsTrigger>
           </TabsList>
 
+          {/* Contenuto della tab "streaming" */}
           <TabsContent value="streaming" className="space-y-6">
+            {/* Griglia per disporre le card dei consigli in modalità responsive */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Prima card: suggerimenti per abbassare la qualità video */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">Impatto Medio</Badge>
+                  {/* Badge che indica l'impatto medio */}
+                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">
+                    Impatto Medio
+                  </Badge>
                   <CardTitle className="text-xl">Abbassa la Qualità Video</CardTitle>
                   <CardDescription>
                     Lo streaming in 4K utilizza fino a 7 volte più dati rispetto alla definizione standard
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  {/* Lista dei suggerimenti per ottimizzare lo streaming */}
                   <ul className="space-y-2">
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 shrink-0" />
@@ -55,13 +71,15 @@ export default function TipsPage() {
                 </CardContent>
               </Card>
 
+              {/* Seconda card: suggerimenti per scaricare contenuti invece di ripetere lo streaming */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-green-100 text-green-700 hover:bg-green-100">Impatto Alto</Badge>
+                  <Badge className="w-fit bg-green-100 text-green-700 hover:bg-green-100">
+                    Impatto Alto
+                  </Badge>
                   <CardTitle className="text-xl">Scarica Invece di Guardare in Streaming</CardTitle>
                   <CardDescription>
-                    Guardi lo stesso contenuto più volte? Scaricalo una volta invece di guardarlo in streaming
-                    ripetutamente
+                    Guardi lo stesso contenuto più volte? Scaricalo una volta invece di guardarlo in streaming ripetutamente
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -76,19 +94,22 @@ export default function TipsPage() {
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 shrink-0" />
-                      <span>
-                        Elimina i contenuti scaricati che non ti servono più per risparmiare spazio di archiviazione
-                      </span>
+                      <span>Elimina i contenuti scaricati che non ti servono più per risparmiare spazio di archiviazione</span>
                     </li>
                   </ul>
                 </CardContent>
               </Card>
 
+              {/* Terza card: suggerimenti per utilizzare la modalità solo audio */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">Impatto Medio</Badge>
+                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">
+                    Impatto Medio
+                  </Badge>
                   <CardTitle className="text-xl">Modalità Solo Audio</CardTitle>
-                  <CardDescription>Quando non hai bisogno di guardare, ascolta soltanto</CardDescription>
+                  <CardDescription>
+                    Quando non hai bisogno di guardare, ascolta soltanto
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -102,9 +123,7 @@ export default function TipsPage() {
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 shrink-0" />
-                      <span>
-                        Disattiva il video durante parti di videochiamate lunghe quando il video non è necessario
-                      </span>
+                      <span>Disattiva il video durante parti di videochiamate lunghe quando il video non è necessario</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -112,11 +131,15 @@ export default function TipsPage() {
             </div>
           </TabsContent>
 
+          {/* Contenuto della tab "devices" dedicato a suggerimenti su dispositivi */}
           <TabsContent value="devices" className="space-y-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Prima card: prolungare la durata dei dispositivi */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-green-100 text-green-700 hover:bg-green-100">Impatto Alto</Badge>
+                  <Badge className="w-fit bg-green-100 text-green-700 hover:bg-green-100">
+                    Impatto Alto
+                  </Badge>
                   <CardTitle className="text-xl">Estendi la Durata dei Dispositivi</CardTitle>
                   <CardDescription>
                     La produzione di nuovi dispositivi ha un'enorme impronta di carbonio
@@ -140,9 +163,12 @@ export default function TipsPage() {
                 </CardContent>
               </Card>
 
+              {/* Seconda card: suggerimenti per la gestione energetica dei dispositivi */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">Impatto Medio</Badge>
+                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">
+                    Impatto Medio
+                  </Badge>
                   <CardTitle className="text-xl">Gestione Energetica</CardTitle>
                   <CardDescription>
                     Ottimizza le impostazioni del tuo dispositivo per usare meno energia
@@ -166,11 +192,16 @@ export default function TipsPage() {
                 </CardContent>
               </Card>
 
+              {/* Terza card: suggerimenti per scollegare dispositivi inutilizzati */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">Impatto Medio</Badge>
+                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">
+                    Impatto Medio
+                  </Badge>
                   <CardTitle className="text-xl">Scollega e Disconnetti</CardTitle>
-                  <CardDescription>Riduci il consumo energetico fantasma dei dispositivi inattivi</CardDescription>
+                  <CardDescription>
+                    Riduci il consumo energetico fantasma dei dispositivi inattivi
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -184,9 +215,7 @@ export default function TipsPage() {
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 shrink-0" />
-                      <span>
-                        Spegni completamente i computer invece di usare la modalità sospensione durante la notte
-                      </span>
+                      <span>Spegni completamente i computer invece di usare la modalità sospensione durante la notte</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -194,11 +223,15 @@ export default function TipsPage() {
             </div>
           </TabsContent>
 
+          {/* Contenuto della tab "browsing" dedicata a suggerimenti per la navigazione */}
           <TabsContent value="browsing" className="space-y-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Prima card: suggerimenti per una navigazione efficiente */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-blue-100 text-blue-700 hover:bg-blue-100">Impatto Basso</Badge>
+                  <Badge className="w-fit bg-blue-100 text-blue-700 hover:bg-blue-100">
+                    Impatto Basso
+                  </Badge>
                   <CardTitle className="text-xl">Navigazione Efficiente</CardTitle>
                   <CardDescription>
                     Piccoli cambiamenti nelle abitudini di navigazione si accumulano nel tempo
@@ -222,11 +255,16 @@ export default function TipsPage() {
                 </CardContent>
               </Card>
 
+              {/* Seconda card: suggerimenti per la gestione delle email */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">Impatto Medio</Badge>
+                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">
+                    Impatto Medio
+                  </Badge>
                   <CardTitle className="text-xl">Gestione Email</CardTitle>
-                  <CardDescription>Riduci l'impronta di carbonio della tua casella di posta</CardDescription>
+                  <CardDescription>
+                    Riduci l'impronta di carbonio della tua casella di posta
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -246,11 +284,16 @@ export default function TipsPage() {
                 </CardContent>
               </Card>
 
+              {/* Terza card: suggerimenti per una ricerca online più efficiente */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-blue-100 text-blue-700 hover:bg-blue-100">Impatto Basso</Badge>
+                  <Badge className="w-fit bg-blue-100 text-blue-700 hover:bg-blue-100">
+                    Impatto Basso
+                  </Badge>
                   <CardTitle className="text-xl">Cerca in Modo Intelligente</CardTitle>
-                  <CardDescription>Ricerche più efficienti significano meno elaborazione del server</CardDescription>
+                  <CardDescription>
+                    Ricerche più efficienti significano meno elaborazione del server
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -272,13 +315,19 @@ export default function TipsPage() {
             </div>
           </TabsContent>
 
+          {/* Contenuto della tab "storage" per suggerimenti sull'archiviazione */}
           <TabsContent value="storage" className="space-y-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Prima card: suggerimenti per il decluttering digitale */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">Impatto Medio</Badge>
+                  <Badge className="w-fit bg-amber-100 text-amber-700 hover:bg-amber-100">
+                    Impatto Medio
+                  </Badge>
                   <CardTitle className="text-xl">Decluttering Digitale</CardTitle>
-                  <CardDescription>Pulisci regolarmente il tuo spazio di archiviazione digitale</CardDescription>
+                  <CardDescription>
+                    Pulisci regolarmente il tuo spazio di archiviazione digitale
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -298,11 +347,16 @@ export default function TipsPage() {
                 </CardContent>
               </Card>
 
+              {/* Seconda card: suggerimenti per ottimizzare l'uso del cloud */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-green-100 text-green-700 hover:bg-green-100">Impatto Alto</Badge>
+                  <Badge className="w-fit bg-green-100 text-green-700 hover:bg-green-100">
+                    Impatto Alto
+                  </Badge>
                   <CardTitle className="text-xl">Ottimizza l'Uso del Cloud</CardTitle>
-                  <CardDescription>Sii strategico su ciò che archivi nel cloud</CardDescription>
+                  <CardDescription>
+                    Sii strategico su ciò che archivi nel cloud
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -322,11 +376,16 @@ export default function TipsPage() {
                 </CardContent>
               </Card>
 
+              {/* Terza card: suggerimenti per bilanciare archiviazione locale e cloud */}
               <Card>
                 <CardHeader>
-                  <Badge className="w-fit bg-blue-100 text-blue-700 hover:bg-blue-100">Impatto Basso</Badge>
+                  <Badge className="w-fit bg-blue-100 text-blue-700 hover:bg-blue-100">
+                    Impatto Basso
+                  </Badge>
                   <CardTitle className="text-xl">Locale vs. Cloud</CardTitle>
-                  <CardDescription>Bilancia tra archiviazione locale e cloud</CardDescription>
+                  <CardDescription>
+                    Bilancia tra archiviazione locale e cloud
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -349,10 +408,10 @@ export default function TipsPage() {
           </TabsContent>
         </Tabs>
       </div>
+      {/* Footer della pagina */}
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full border-t border-eco-200 px-4 md:px-6 bg-eco-50">
         <p className="text-xs text-eco-600">© 2025 Carbonico. Tutti i diritti riservati.</p>
       </footer>
     </div>
   )
 }
-

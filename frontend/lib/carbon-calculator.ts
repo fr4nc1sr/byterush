@@ -1,60 +1,92 @@
+// Definizione dell'interfaccia che rappresenta le attività dell'utente
 interface UserActivity {
-  streamingHours: number
-  videoQuality: string
-  socialMediaHours: number
-  emailsPerDay: number
-  cloudStorageGB: number
-  videoCallsHours: number
+  streamingHours: number        // Ore dedicate allo streaming video
+  videoQuality: string          // Qualità del video (ad esempio "sd", "hd", "4k")
+  socialMediaHours: number      // Ore dedicate ai social media
+  emailsPerDay: number          // Numero di email inviate/ricevute al giorno
+  cloudStorageGB: number        // Quantità di dati in GB memorizzati nel cloud
+  videoCallsHours: number       // Ore dedicate alle videochiamate
 }
 
-// Fattori di emissione di CO2 (grammi di CO2 per unità)
+// Fattori di emissione di CO2 espressi in grammi per unità di consumo
+// Questi valori rappresentano una stima delle emissioni associate a diverse attività digitali
 const EMISSION_FACTORS = {
   streaming: {
-    sd: 1.0 * 8, // 1g per ora per GB, SD ~8GB/ora
-    hd: 3.0 * 12, // HD ~12GB/ora
-    "4k": 7.0 * 14, // 4K ~14GB/ora
+    // Calcolo basato su emissioni per GB per ora e consumo stimato in GB per ora
+    // SD: 1g/GB * 8GB/ora
+    sd: 1.0 * 8,
+    // HD: 3g/GB * 12GB/ora
+    hd: 3.0 * 12,
+    // 4K: 7g/GB * 14GB/ora
+    "4k": 7.0 * 14,
   },
-  socialMedia: 0.5 * 1.5, // per ora (stimato 1.5GB/ora)
+  // Emissioni per ora sui social media, con stima di 1.5GB/ora e 0.5g per GB
+  socialMedia: 0.5 * 1.5,
   email: {
-    regular: 0.2, // per email
-    withAttachment: 0.5, // per email con allegato
+    // Emissioni per email regolare
+    regular: 0.2,
+    // Emissioni per email con allegato
+    withAttachment: 0.5,
   },
-  cloudStorage: 0.1, // per GB al giorno
-  videoCall: 2.5 * 2, // per ora (stimato 2GB/ora)
+  // Emissioni giornaliere per ogni GB di archiviazione cloud
+  cloudStorage: 0.1,
+  // Emissioni per ora di videochiamata, basate su 2GB/ora e 2.5g per GB
+  videoCall: 2.5 * 2,
 }
 
+/**
+ * Funzione per calcolare l'impronta di carbonio digitale in grammi,
+ * in base alle attività digitali fornite dall'utente.
+ *
+ * @param activity - Oggetto contenente le attività dell'utente (ore di streaming, qualità video, ecc.)
+ * @returns Il totale delle emissioni di CO₂, arrotondato a 1 decimale
+ */
 export function calculateCarbonFootprint(activity: UserActivity): number {
-  // Calcola le emissioni dello streaming
+  // Calcola le emissioni derivanti dallo streaming video.
+  // Seleziona il fattore di emissione in base alla qualità video specificata (sd, hd o 4k)
   const streamingEmissions =
     activity.streamingHours *
     EMISSION_FACTORS.streaming[activity.videoQuality as keyof typeof EMISSION_FACTORS.streaming]
 
-  // Calcola le emissioni dei social media
+  // Calcola le emissioni derivanti dall'utilizzo dei social media
   const socialMediaEmissions = activity.socialMediaHours * EMISSION_FACTORS.socialMedia
 
-  // Calcola le emissioni delle email (supponiamo che il 30% abbia allegati)
+  // Calcola le emissioni derivanti dall'invio/ricezione di email.
+  // Supponiamo che il 70% delle email sia senza allegato e il 30% con allegato
   const emailEmissions =
     activity.emailsPerDay * 0.7 * EMISSION_FACTORS.email.regular +
     activity.emailsPerDay * 0.3 * EMISSION_FACTORS.email.withAttachment
 
-  // Calcola le emissioni dell'archiviazione cloud
+  // Calcola le emissioni associate all'archiviazione cloud (emissioni per GB al giorno)
   const cloudStorageEmissions = activity.cloudStorageGB * EMISSION_FACTORS.cloudStorage
 
-  // Calcola le emissioni delle videochiamate
+  // Calcola le emissioni derivanti dalle videochiamate
   const videoCallEmissions = activity.videoCallsHours * EMISSION_FACTORS.videoCall
 
-  // Somma tutte le emissioni
+  // Somma tutte le emissioni parziali per ottenere il totale
   const totalEmissions =
     streamingEmissions + socialMediaEmissions + emailEmissions + cloudStorageEmissions + videoCallEmissions
 
-  return Math.round(totalEmissions * 10) / 10 // Arrotonda a 1 decimale
+  // Arrotonda il risultato a un decimale e lo restituisce
+  return Math.round(totalEmissions * 10) / 10
 }
 
+/**
+ * Funzione per ottenere equivalenti pratici delle emissioni di CO₂.
+ *
+ * @param carbonGrams - Emissioni totali in grammi di CO₂
+ * @returns Un oggetto contenente:
+ *   - driving: chilometri percorsi in auto equivalenti
+ *   - trees: numero di alberi necessari per assorbire le emissioni giornaliere
+ *   - lightbulbs: ore di funzionamento di lampadine LED da 10W equivalenti
+ */
 export function getEquivalent(carbonGrams: number) {
-  // Fattori di conversione
-  const drivingFactor = 0.12 // km per grammo di CO2
-  const treeFactor = 0.0055 // alberi necessari per assorbire 1g CO2 al giorno
-  const lightbulbFactor = 0.1 // ore di LED da 10W per grammo di CO2
+  // Fattore di conversione: km percorsi in auto per grammo di CO₂
+  const drivingFactor = 0.12
+  // Fattore di conversione: numero di alberi necessari per assorbire 1g di CO₂ al giorno
+  const treeFactor = 0.0055
+  // Fattore di conversione: ore di funzionamento di LED da 10W per grammo di CO₂
+  const lightbulbFactor = 0.1
 
   return {
     driving: carbonGrams * drivingFactor,
@@ -63,10 +95,18 @@ export function getEquivalent(carbonGrams: number) {
   }
 }
 
+/**
+ * Funzione per fornire suggerimenti utili a ridurre l'impronta di carbonio digitale
+ * basati sulle attività dell'utente.
+ *
+ * @param activity - Oggetto che descrive le attività digitali dell'utente
+ * @returns Un array di suggerimenti, ciascuno contenente titolo, descrizione e un valore d'impatto
+ */
 export function getSuggestions(activity: UserActivity) {
+  // Inizializza l'array dei suggerimenti
   const suggestions = []
 
-  // Suggerimento sulla qualità dello streaming
+  // Suggerimento: abbassa la qualità dello streaming se usi 4K per più di 1 ora
   if (activity.videoQuality === "4k" && activity.streamingHours > 1) {
     suggestions.push({
       title: "Abbassa la qualità dello streaming",
@@ -74,6 +114,7 @@ export function getSuggestions(activity: UserActivity) {
       impact: 60,
     })
   } else if (activity.videoQuality === "hd" && activity.streamingHours > 2) {
+    // Suggerimento: considera la qualità SD se usi HD per più di 2 ore
     suggestions.push({
       title: "Considera SD per alcuni contenuti",
       description: "Per certi programmi o quando sei su mobile, la qualità SD è sufficiente",
@@ -81,7 +122,7 @@ export function getSuggestions(activity: UserActivity) {
     })
   }
 
-  // Ridurre il tempo di streaming
+  // Suggerimento: riduci il tempo di streaming se supera le 3 ore
   if (activity.streamingHours > 3) {
     suggestions.push({
       title: "Riduci il tempo di streaming",
@@ -90,7 +131,7 @@ export function getSuggestions(activity: UserActivity) {
     })
   }
 
-  // Gestione email
+  // Suggerimento: gestisci la casella di posta se ricevi più di 20 email al giorno
   if (activity.emailsPerDay > 20) {
     suggestions.push({
       title: "Pulisci la tua casella di posta",
@@ -99,7 +140,7 @@ export function getSuggestions(activity: UserActivity) {
     })
   }
 
-  // Ottimizzazione archiviazione cloud
+  // Suggerimento: ottimizza l'archiviazione cloud se usi più di 10GB
   if (activity.cloudStorageGB > 10) {
     suggestions.push({
       title: "Ottimizza l'archiviazione cloud",
@@ -108,7 +149,7 @@ export function getSuggestions(activity: UserActivity) {
     })
   }
 
-  // Videochiamate
+  // Suggerimento: riduci l'uso del video durante le chiamate se superi le 2 ore
   if (activity.videoCallsHours > 2) {
     suggestions.push({
       title: "Disattiva il video quando non necessario",
@@ -117,7 +158,7 @@ export function getSuggestions(activity: UserActivity) {
     })
   }
 
-  // Social media
+  // Suggerimento: limita il tempo sui social media se supera le 2 ore
   if (activity.socialMediaHours > 2) {
     suggestions.push({
       title: "Riduci lo scrolling sui social media",
@@ -126,7 +167,7 @@ export function getSuggestions(activity: UserActivity) {
     })
   }
 
-  // Se non ci sono suggerimenti specifici, aggiungi quelli generali
+  // Se non sono stati generati abbastanza suggerimenti, aggiunge alcune raccomandazioni generali
   if (suggestions.length < 3) {
     suggestions.push({
       title: "Scarica invece di guardare in streaming",
@@ -142,7 +183,6 @@ export function getSuggestions(activity: UserActivity) {
     })
   }
 
-  // Restituisci i primi 3 suggerimenti
+  // Restituisce i primi 3 suggerimenti generati
   return suggestions.slice(0, 3)
 }
-
